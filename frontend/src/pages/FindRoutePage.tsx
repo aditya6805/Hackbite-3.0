@@ -28,11 +28,12 @@ function FindRoutePage() {
     origin: string;
     destination: string;
     travelMode: string;
+    journeyDate: Date | null;
   } | null>(null);
   
   const navigate = useNavigate();
 
-  const handleSearch = async (origin: string, destination: string, travelMode: string) => {
+  const handleSearch = async (origin: string, destination: string, travelMode: string, journeyDate: Date | null) => {
     try {
       setLoading(true);
       setError(null);
@@ -41,7 +42,8 @@ function FindRoutePage() {
       setSearchParams({
         origin,
         destination,
-        travelMode
+        travelMode,
+        journeyDate
       });
       
       // Extract city name from the origin and destination (remove state)
@@ -104,7 +106,8 @@ function FindRoutePage() {
         routes: [route],
         origin: searchParams.origin,
         destination: searchParams.destination,
-        travelMode: searchParams.travelMode
+        travelMode: searchParams.travelMode,
+        journeyDate: searchParams.journeyDate
       } 
     });
   };
@@ -197,6 +200,7 @@ function FindRoutePage() {
                   <Typography variant="body1" color="text.secondary" gutterBottom>
                     {routes.length} route{routes.length !== 1 ? 's' : ''} found
                     {searchParams && ` from ${searchParams.origin} to ${searchParams.destination}`}
+                    {searchParams?.journeyDate && ` for ${searchParams.journeyDate.toLocaleDateString()}`}
                   </Typography>
                   
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -209,7 +213,8 @@ function FindRoutePage() {
                           routes,
                           origin: searchParams?.origin || '',
                           destination: searchParams?.destination || '',
-                          travelMode: searchParams?.travelMode || ''
+                          travelMode: searchParams?.travelMode || '',
+                          journeyDate: searchParams?.journeyDate || null
                         } 
                       })}
                     >
@@ -237,7 +242,8 @@ function FindRoutePage() {
                               routes,
                               origin: searchParams?.origin || '',
                               destination: searchParams?.destination || '',
-                              travelMode: searchParams?.travelMode || ''
+                              travelMode: searchParams?.travelMode || '',
+                              journeyDate: searchParams?.journeyDate || null
                             } 
                           })}
                         >

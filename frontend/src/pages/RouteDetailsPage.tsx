@@ -22,10 +22,12 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 const RouteDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { routes, origin, destination } = location.state as { 
+  const { routes, origin, destination, travelMode, journeyDate } = location.state as { 
     routes: BusRoute[], 
     origin: string, 
-    destination: string 
+    destination: string,
+    travelMode: string,
+    journeyDate: Date | null
   };
 
   if (!routes || routes.length === 0) {
@@ -106,6 +108,11 @@ const RouteDetailsPage = () => {
               {routes.length} Route{routes.length > 1 ? 's' : ''} Available
             </Typography>
           </Box>
+          {journeyDate && (
+            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+              Journey Date: {journeyDate.toLocaleDateString()}
+            </Typography>
+          )}
         </Paper>
 
         {routes.map((route, index) => {

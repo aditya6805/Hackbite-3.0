@@ -27,11 +27,12 @@ import RouteCard from '../components/RouteCard';
 const AllRoutesPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { routes, origin, destination, travelMode } = location.state as { 
+  const { routes, origin, destination, travelMode, journeyDate } = location.state as { 
     routes: BusRoute[], 
     origin: string, 
     destination: string,
-    travelMode: string
+    travelMode: string,
+    journeyDate: Date | null
   };
   
   const [sortBy, setSortBy] = useState<string>('price-low');
@@ -79,7 +80,8 @@ const AllRoutesPage = () => {
         routes: [route],
         origin: origin,
         destination: destination,
-        travelMode: travelMode
+        travelMode: travelMode,
+        journeyDate: journeyDate
       } 
     });
   };
@@ -160,6 +162,11 @@ const AllRoutesPage = () => {
             <Typography variant="h6">
               <LocationOnIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
               {origin} to {destination}
+              {journeyDate && (
+                <Typography variant="subtitle1" sx={{ mt: 1, color: 'text.secondary' }}>
+                  Journey Date: {journeyDate.toLocaleDateString()}
+                </Typography>
+              )}
             </Typography>
             <Typography variant="body1">
               <DirectionsBusIcon sx={{ verticalAlign: 'middle', mr: 1 }} />

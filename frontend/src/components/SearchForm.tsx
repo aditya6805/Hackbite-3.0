@@ -13,11 +13,15 @@ import {
   FormControlLabel,
   Radio
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import { statesAndUTs } from '../data/indianStates'; // Updated import path
 
 interface SearchFormProps {
-  onSearch: (origin: string, destination: string, travelMode: string) => void;
+  onSearch: (origin: string, destination: string, travelMode: string, journeyDate: Date | null) => void;
   loading?: boolean;
 }
 
@@ -27,13 +31,18 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading = false }) =>
   const [destinationCity, setDestinationCity] = useState('');
   const [destinationState, setDestinationState] = useState('');
   const [travelMode, setTravelMode] = useState('BUS ONLY'); // Default travel mode
+  const [journeyDate, setJourneyDate] = useState<Dayjs | null>(dayjs());
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const origin = `${originCity}, ${originState}`;
     const destination = `${destinationCity}, ${destinationState}`;
-    onSearch(origin, destination, travelMode);
+    onSearch(origin, destination, travelMode, journeyDate?.toDate() || null);
   };
+
+  // Calculate min and max dates (today to 2 months from now)
+  const minDate = dayjs();
+  const maxDate = dayjs().add(2, 'month');
 
   return (
     <Paper 
@@ -104,6 +113,18 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading = false }) =>
             ))}
           </Select>
         </FormControl>
+        
+        {/* Journey Date Section */}
+        <Typography variant="subtitle1" sx={{ mt: 2 }}>Journey Date:</Typography>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            value={journeyDate}
+            onChange={(newValue) => setJourneyDate(newValue)}
+            minDate={minDate}
+            maxDate={maxDate}
+            sx={{ width: '100%', mt: 1 }}
+          />
+        </LocalizationProvider>
         
         {/* Travel Mode Selection */}
         <FormControl component="fieldset" sx={{ mt: 2 }}>
